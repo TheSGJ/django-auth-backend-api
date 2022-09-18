@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class MyAccountManager(BaseUserManager):
-	def create_user(self, email, username, password=None):
+	def create_user(self, email, full_name, username, password=None):
 		if not email:
 			raise ValueError('Users must have an email address')
 		if not username:
@@ -11,6 +11,7 @@ class MyAccountManager(BaseUserManager):
 
 		user = self.model(
 			email=self.normalize_email(email),
+			full_name=full_name,
 			username=username,
 		)
 
@@ -18,11 +19,12 @@ class MyAccountManager(BaseUserManager):
 		user.save(using=self._db)
 		return user
 
-	def create_superuser(self, email, username, password):
+	def create_superuser(self, email, username, password, full_name):
 		user = self.create_user(
 			email=self.normalize_email(email),
-			password=password,
+			full_name=full_name,
 			username=username,
+			password=password,
 		)
 		user.is_admin = True
 		user.is_staff = True
@@ -34,6 +36,7 @@ class MyAccountManager(BaseUserManager):
 class Account(AbstractBaseUser):
 	email 					= models.EmailField(verbose_name="email", max_length=60, unique=True)
 	username 				= models.CharField(max_length=30, unique=True)
+	full_name				= models.CharField(max_length=60)
 	date_joined				= models.DateTimeField(verbose_name='date joined', auto_now_add=True)
 	last_login				= models.DateTimeField(verbose_name='last login', auto_now=True)
 	is_admin				= models.BooleanField(default=False)
@@ -42,8 +45,8 @@ class Account(AbstractBaseUser):
 	is_superuser			= models.BooleanField(default=False)
 
 
-	USERNAME_FIELD = 'email'
-	REQUIRED_FIELDS = ['username']
+	USERNAME_FIELD = 'username'
+	REQUIRED_FIELDS = ['email','full_name']
 
 	objects = MyAccountManager()
 
