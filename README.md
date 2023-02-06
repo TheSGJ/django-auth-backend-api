@@ -37,6 +37,7 @@ Last CMD: `sudo service postgresql restart`
 
 `ALTER USER postgres password 'hsjga(*hdjkjs829';`
 - https://generate-secret.vercel.app/32 `Generate secret key via this.`
+
 `CREATE USER pld WITH PASSWORD 'hikjh4fgh';` 
 
 `DROP USER pld;`
